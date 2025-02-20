@@ -1,6 +1,7 @@
 import React from 'react';
 
 function App(): React.ReactElement {
+  // Check GitHub JIRA Integration
   return (
     <div className={'flex flex-col text-red-500'}>
       <div>{'Hello World!'}</div>

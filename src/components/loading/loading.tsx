@@ -1,9 +1,9 @@
-import { FaSpinner } from 'react-icons/fa';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 export const Loading = (): React.ReactElement => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <FaSpinner className="animate-spin text-indigo-500 text-6xl" />
+      <AiOutlineLoading3Quarters className="animate-spin text-gray-700 text-2xl font-bold" />
       <p className="mt-4 text-lg text-gray-700">Loading...</p>
     </div>
   );

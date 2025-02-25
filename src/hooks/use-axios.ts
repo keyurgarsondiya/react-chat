@@ -1,15 +1,19 @@
-import { HttpMethods } from '../constants';
+import { HttpMethod } from '../constants';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export interface UseAxiosProps {
-  method: HttpMethods;
+  method: HttpMethod;
   url: string;
-  headers?: Record<string, unknown>;
+  headers?: Record<string, string>;
   body?: Record<string, unknown>;
 }
 
-axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com';
+axios.defaults = {
+  ...axios.defaults,
+  baseURL: 'https://jsonplaceholder.typicode.com',
+  withCredentials: true,
+};
 
 export const useAxios = ({
   method,
@@ -24,8 +28,18 @@ export const useAxios = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchData = async () => {
+    setLoading(true);
+    const controller = new AbortController();
     try {
-      const response = await axios[method](url, body, headers);
+      let response;
+      response = await axios[method](url, {
+        ...(!(method === HttpMethod.Get || method === HttpMethod.Delete) && {
+          body,
+        }),
+        headers,
+        signal: controller.signal,
+      });
+
       setResponse(response.data);
     } catch (error: unknown) {
       console.log('Error in fetchData: ', (error as AxiosError).message);
@@ -35,9 +49,5 @@ export const useAxios = ({
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [method, url, body, headers]);
-
-  return { response, error, loading };
+  return { response, error, loading, fetchData };
 };

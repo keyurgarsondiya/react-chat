@@ -1,7 +1,8 @@
 const Home = () => {
+  console.log('Reached Home');
   return (
     <div className={'w-full h-screen flex justify-center items-center'}>
-      {'Login Page'}
+      {'Home Page'}
     </div>
   );
 };

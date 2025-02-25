@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router';
-import { ActionType, useAuth } from '../../store/auth';
+import { useAuth } from '../../store/auth';
 import { Navigate } from 'react-router';
+import { Loading } from '../loading';
 
 export const ProtectedRoute = ({
   children,
@@ -10,25 +11,16 @@ export const ProtectedRoute = ({
 }): React.ReactElement => {
   const {
     state: { isAuthenticated, loading },
-    dispatch,
   } = useAuth();
   const location = useLocation();
 
   if (loading) {
-    return <div>{'Loading...'}</div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
-
-  useEffect(() => {
-    // const token = localStorage.getItem('authToken');
-    // if (token) {
-    //   dispatch({
-    //     type: ActionType.LoginRequestSuccess,
-    //     payload: {
-    //       token,
-    //     },
-    //   });
-    // }
-  }, []);
 
   return (
     <>

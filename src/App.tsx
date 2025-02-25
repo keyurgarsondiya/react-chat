@@ -9,14 +9,9 @@ function App(): React.ReactElement {
   return (
     <AuthProvider>
       <Routes>
-        <Route path={'/login'} element={<Login />} />
-        <Route path={'/sign-up'} element={<SignUp />} />
-        <Route index path={'/logout'} element={<Logout />} />
-        <Route index path={'/'} element={<Home />} />
-
         <Route
           index
-          path={'/home'}
+          path={'/'}
           element={
             <ProtectedRoute>
               <Home />
@@ -39,6 +34,10 @@ function App(): React.ReactElement {
             </ProtectedRoute>
           }
         />
+
+        <Route path={'/login'} element={<Login />} />
+        <Route path={'/sign-up'} element={<SignUp />} />
+        <Route index path={'/logout'} element={<Logout />} />
       </Routes>
     </AuthProvider>
   );

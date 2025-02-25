@@ -1,21 +1,21 @@
+import { checkAuth } from '../../../../services';
 import React from 'react';
 import { Actions } from '../../reducer.ts';
-import { loginRequest } from '../../../../services';
 import { ActionType } from '../../action-type.ts';
 import { AUTH_TOKEN } from '../../../../constants';
 
-export const loginRequestAction = async (
-  body: Record<string, unknown>,
+export const checkAuthAction = async (
+  token: string,
   dispatch: React.Dispatch<Actions>,
   options: Record<string, unknown>,
 ): Promise<void> => {
   try {
-    const loginRequestResponse = await loginRequest(body, options);
-    localStorage.setItem(AUTH_TOKEN, loginRequestResponse);
+    await checkAuth(options);
+
     dispatch({
       type: ActionType.LoginRequestSuccess,
       payload: {
-        token: loginRequestResponse,
+        token,
       },
     });
   } catch (error) {

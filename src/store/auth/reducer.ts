@@ -9,6 +9,8 @@ type Payload = {
   [ActionType.LoginRequest]: PayloadTypes['loginRequest'];
   [ActionType.LoginRequestSuccess]: PayloadTypes['loginRequestSuccess'];
   [ActionType.Logout]: PayloadTypes['logout'];
+  [ActionType.CheckingAuth]: undefined;
+  [ActionType.LoginRequestError]: undefined;
 };
 
 export const reducer = (
@@ -17,6 +19,7 @@ export const reducer = (
 ): AuthenticationStateType => {
   switch (action.type) {
     case ActionType.LoginRequest:
+    case ActionType.CheckingAuth:
       return {
         ...state,
         loading: true,
@@ -27,6 +30,13 @@ export const reducer = (
         isAuthenticated: true,
         token: action.payload.token,
         loading: false,
+      };
+    case ActionType.LoginRequestError:
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+        token: undefined,
       };
     default:
       return state;

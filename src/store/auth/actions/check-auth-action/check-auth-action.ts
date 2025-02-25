@@ -24,5 +24,9 @@ export const checkAuthAction = async (
       type: ActionType.LoginRequestError,
     });
     console.log('Error: ', error);
+  } finally {
+    dispatch({
+      type: ActionType.CheckingAuthFinished,
+    });
   }
 };

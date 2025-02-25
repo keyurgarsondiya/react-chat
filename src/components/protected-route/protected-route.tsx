@@ -10,16 +10,12 @@ export const ProtectedRoute = ({
   children: React.ReactElement;
 }): React.ReactElement => {
   const {
-    state: { isAuthenticated, loading },
+    state: { isAuthenticated, loading, isInitialized },
   } = useAuth();
   const location = useLocation();
 
-  if (loading) {
-    return (
-      <div>
-        <Loading />
-      </div>
-    );
+  if (loading || !isInitialized) {
+    return <Loading />;
   }
 
   return (

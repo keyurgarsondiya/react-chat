@@ -1,17 +1,45 @@
 import React from 'react';
+import { Routes, Route } from 'react-router';
+import { Home, Login, Logout, Profile, Settings, SignUp } from './pages';
+import { AuthProvider } from './store/auth';
+import { ProtectedRoute } from './components';
 
 function App(): React.ReactElement {
+  // Check GitHub JIRA Integration
   return (
-    <div className={'flex flex-col text-red-500'}>
-      <div>{'Hello World!'}</div>
-      <button className="btn">Button</button>
-      <button className="btn btn-neutral">Neutral</button>
-      <button className="btn btn-primary">Primary</button>
-      <button className="btn btn-secondary">Secondary</button>
-      <button className="btn btn-accent">Accent</button>
-      <button className="btn btn-ghost">Ghost</button>
-      <button className="btn btn-link">Link</button>
-    </div>
+    <AuthProvider>
+      <Routes>
+        <Route
+          index
+          path={'/'}
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={'/settings'}
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={'/profile'}
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path={'/login'} element={<Login />} />
+        <Route path={'/sign-up'} element={<SignUp />} />
+        <Route index path={'/logout'} element={<Logout />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 

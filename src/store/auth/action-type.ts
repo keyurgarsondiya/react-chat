@@ -3,5 +3,6 @@ export enum ActionType {
   LoginRequestSuccess = 'loginRequestSuccess',
   LoginRequestError = 'loginRequestError',
   CheckingAuth = 'checkingAuth',
+  CheckingAuthFinished = 'checkingAuthFinished',
   Logout = 'logout',
 }

@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const token = localStorage.getItem(AUTH_TOKEN);
+    console.log('Token in AuthContext: ', token);
     if (token) {
       (async () => {
         const checkAuthAbortController = new AbortController();
@@ -29,6 +30,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           signal: checkAuthAbortController.signal,
         });
       })();
+    } else {
+      dispatch({ type: ActionType.CheckingAuthFinished });
     }
   }, []);
 

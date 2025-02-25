@@ -5,7 +5,7 @@ import { AuthProvider } from './store/auth';
 import { ProtectedRoute } from './components';
 
 function App(): React.ReactElement {
-  // Check GitHub JIRA Integration
+  // TODO: Check GitHub JIRA Integration
   return (
     <AuthProvider>
       <Routes>

@@ -1,27 +1,51 @@
-import React from 'react';
-import { useLocation } from 'react-router';
+import React, { useEffect } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router';
 import { useAuth } from '../../store/auth';
-import { Navigate } from 'react-router';
+import { ServiceStatus } from '../../constants';
+import { checkAuthAction } from '../../store/auth/actions';
 import { Loading } from '../loading';
 
-export const ProtectedRoute = ({
-  children,
-}: {
-  children: React.ReactElement;
-}): React.ReactElement => {
+export const ProtectedRoute = (): React.ReactElement => {
   const {
-    state: { isAuthenticated, loading, isInitialized },
+    state: { isAuthenticated, serviceStatus, isAuthInitialized },
+    dispatch,
   } = useAuth();
   const location = useLocation();
 
-  if (loading || !isInitialized) {
-    return <Loading />;
+  useEffect(() => {
+    const checkAuthAbortController = new AbortController();
+
+    (async () => {
+      await checkAuthAction(dispatch, {
+        signal: checkAuthAbortController.signal,
+      });
+    })();
+
+    return () => {
+      checkAuthAbortController.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('isAuthInitialized: ', isAuthInitialized);
+  }, [isAuthInitialized]);
+
+  if (!isAuthInitialized || serviceStatus === ServiceStatus.Loading) {
+    return (
+      <div
+        className={
+          'min-h-screen w-full flex flex-col justify-center items-center '
+        }
+      >
+        <Loading />
+      </div>
+    );
   }
 
   return (
     <>
       {isAuthenticated ? (
-        children
+        <Outlet />
       ) : (
         <Navigate to="/login" replace state={{ from: location }} />
       )}

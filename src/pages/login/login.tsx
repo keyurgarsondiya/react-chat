@@ -1,13 +1,27 @@
 import { loginRequestAction } from '../../store/auth/actions';
-import { useEffect, useState } from 'react';
+import React, { FormEventHandler, useEffect, useState } from 'react';
 import { useAuth } from '../../store/auth';
-import { useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { AuthImagePattern } from '../../components';
+import { FaLock, FaRegMessage } from 'react-icons/fa6';
+import { MdOutlineEmail } from 'react-icons/md';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { ServiceStatus } from '../../constants';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
-const Login = () => {
-  const [email, setEmail] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
+interface FormData {
+  email: string;
+  password: string;
+}
+
+const Login = (): React.ReactElement => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    email: '',
+    password: '',
+  });
   const {
-    state: { isAuthenticated },
+    state: { isAuthenticated, serviceStatus },
     dispatch,
   } = useAuth();
   const navigate = useNavigate();
@@ -16,62 +30,130 @@ const Login = () => {
   const from =
     (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
-  const handleLogin = async () => {
+  const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
     const loginAbortController = new AbortController();
-    await loginRequestAction({ email, password }, dispatch, {
-      signal: loginAbortController.signal,
-    });
+    await loginRequestAction(
+      {
+        email: formData.email,
+        password: formData.password,
+      },
+      dispatch,
+      {
+        signal: loginAbortController.signal,
+      },
+    );
   };
 
   useEffect(() => {
-    console.log('isAuthenticated: ', isAuthenticated);
-    console.log('Location State: ', location.state);
-    console.log('From state: ', from);
     if (isAuthenticated) {
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, from]);
+  }, [isAuthenticated, from]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full bg-white p-8 rounded shadow">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form>
-          <div className="mb-4">
-            <label className="block text-gray-700" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
-            />
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* left side */}
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+        <div className="w-full max-w-md space-y-8">
+          {/*LOGO*/}
+          <div className="text-center mb-8">
+            <div className="flex flex-col items-center gap-2 group">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <FaRegMessage className="size-6 text-primary" />
+              </div>
+              <h1 className="text-2xl font-bold mt-2">Welcome back</h1>
+              <p className="text-base-content/60">Sign in to your account</p>
+            </div>
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-700" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
-            />
+
+          {/**/}
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Email</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MdOutlineEmail className="size-5 text-base-content/40" />
+                </div>
+                <input
+                  type="text"
+                  className="input input-bordered w-full pl-10"
+                  placeholder="john.doe@gmail.com"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Password</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaLock className="size-4 text-base-content/40" />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="input input-bordered w-full pl-10"
+                  placeholder="••••••"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+                <button
+                  type={'button'}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={
+                    'absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer'
+                  }
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className={'size-4 text-base-content/40'} />
+                  ) : (
+                    <FaEye className={'size-4 text-base-content/40'} />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type={'submit'}
+              disabled={serviceStatus === ServiceStatus.Loading}
+              className={'btn btn-primary w-full'}
+            >
+              {serviceStatus === ServiceStatus.Loading ? (
+                <AiOutlineLoading3Quarters className="animate-spin text-gray-700 text-base font-bold" />
+              ) : (
+                'Sign in'
+              )}
+            </button>
+          </form>
+
+          <div className={'text-center'}>
+            <p className={'text-base-content/60'}>
+              Don't have an account?{' '}
+              <Link to={'/sign-up'} className={'link link-primary'}>
+                Create account
+              </Link>
+            </p>
           </div>
-          <button
-            type="button"
-            onClick={handleLogin}
-            className="w-full bg-indigo-500 text-white py-2 rounded hover:bg-indigo-600 transition duration-200"
-          >
-            Login
-          </button>
-        </form>
+        </div>
       </div>
+
+      {/* Right Side - Image Pattern */}
+
+      <AuthImagePattern
+        title={'Welcome back!'}
+        subtitle={
+          'Sign in to continue your conversations and catch up with your messages.'
+        }
+      />
     </div>
   );
 };

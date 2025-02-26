@@ -1,97 +1,212 @@
-import React, { useState } from 'react';
-import { loginRequestAction } from '../../store/auth/actions';
+import React, { FormEventHandler, useEffect, useState } from 'react';
+import { signUpRequestAction } from '../../store/auth/actions';
 import { useAuth } from '../../store/auth';
+import { FaLock, FaRegMessage } from 'react-icons/fa6';
+import { FiUser } from 'react-icons/fi';
+import { MdOutlineEmail } from 'react-icons/md';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { AuthImagePattern } from '../../components';
+import { Link, useNavigate } from 'react-router';
+import { ServiceStatus } from '../../constants';
+import toast from 'react-hot-toast';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+
+interface FormData {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 const SignUp = (): React.ReactElement => {
-  const [username, setUsername] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
+  const {
+    state: { isAuthenticated, serviceStatus },
+  } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    email: '',
+    password: '',
+  });
   const { dispatch } = useAuth();
+  const navigate = useNavigate();
 
-  // const { response, error, loading, fetchData } = useAxios({
-  //   url: 'https://jsonplaceholder.typicode.com/posts',
-  //   method: HttpMethod.Post,
-  //   headers: {
-  //     accept: 'application/json',
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: {
-  //     title: 'foo',
-  //     body: 'bar',
-  //     userId: 1,
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-  //
-  // useEffect(() => {
-  //   if (response) {
-  //     console.log('Response:', response);
-  //   }
-  //   if (error) {
-  //     console.error('Error:', error);
-  //   }
-  // }, [response, error]);
-
-  const handleSubmit = async () => {
-    const loginAbortController = new AbortController();
-    await loginRequestAction({ email: username, password }, dispatch, {
-      signal: loginAbortController.signal,
-    });
+  const displayToastErrorMessage = (message: string) => {
+    return toast.error(message);
   };
 
+  const validateForm = () => {
+    if (!formData.fullName.trim()) {
+      displayToastErrorMessage('Full name is required');
+      return false;
+    }
+
+    if (!formData.email.trim()) {
+      displayToastErrorMessage('Email is required');
+      return false;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      displayToastErrorMessage('Invalid email format');
+      return false;
+    }
+
+    if (!formData.password) {
+      displayToastErrorMessage('Password is required');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const isFormEntriesValid = validateForm();
+    if (isFormEntriesValid) {
+      const signUpAbortController = new AbortController();
+      await signUpRequestAction(
+        {
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+        },
+        dispatch,
+        {
+          signal: signUpAbortController.signal,
+        },
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full bg-white p-8 rounded shadow">
-        <h2 className="text-2xl font-bold mb-6 text-center">Signup</h2>
-        <form>
-          <div className="mb-4">
-            <label className="block text-gray-700" htmlFor="username">
-              Username or Email
-            </label>
-            <input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              className="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
-            />
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* left side */}
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+        <div className="w-full max-w-md space-y-8">
+          {/*LOGO*/}
+          <div className="text-center mb-8">
+            <div className="flex flex-col items-center gap-2 group">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <FaRegMessage className="size-6 text-primary" />
+              </div>
+              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
+              <p className="text-base-content/60">
+                Get started with your free account
+              </p>
+            </div>
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-700" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
-            />
+
+          {/**/}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Full Name</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FiUser className="size-5 text-base-content/40" />
+                </div>
+                <input
+                  type="text"
+                  className="input input-bordered w-full pl-10"
+                  placeholder="John Doe"
+                  value={formData.fullName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Email</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MdOutlineEmail className="size-5 text-base-content/40" />
+                </div>
+                <input
+                  type="text"
+                  className="input input-bordered w-full pl-10"
+                  placeholder="john.doe@gmail.com"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Password</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaLock className="size-4 text-base-content/40" />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="input input-bordered w-full pl-10"
+                  placeholder="••••••"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+                <button
+                  type={'button'}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={
+                    'absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer'
+                  }
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className={'size-4 text-base-content/40'} />
+                  ) : (
+                    <FaEye className={'size-4 text-base-content/40'} />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type={'submit'}
+              disabled={serviceStatus === ServiceStatus.Loading}
+              className={'btn btn-primary w-full'}
+            >
+              {serviceStatus === ServiceStatus.Loading ? (
+                <AiOutlineLoading3Quarters className="animate-spin text-gray-700 text-base font-bold" />
+              ) : (
+                'Create Account'
+              )}
+            </button>
+          </form>
+
+          <div className={'text-center'}>
+            <p className={'text-base-content/60'}>
+              Already have an account?{' '}
+              <Link to={'/login'} className={'link link-primary'}>
+                Login
+              </Link>
+            </p>
           </div>
-          {/*<div className="mb-6">*/}
-          {/*  <label className="block text-gray-700" htmlFor="password">*/}
-          {/*    Confirm Password*/}
-          {/*  </label>*/}
-          {/*  <input*/}
-          {/*    id="password"*/}
-          {/*    type="password"*/}
-          {/*    placeholder="Re-Enter your password"*/}
-          {/*    className="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"*/}
-          {/*  />*/}
-          {/*</div>*/}
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="w-full bg-indigo-500 text-white py-2 rounded hover:bg-indigo-600 transition duration-200"
-          >
-            Signup
-          </button>
-        </form>
+        </div>
       </div>
+
+      {/*  right side */}
+      <AuthImagePattern
+        title={'Join our community'}
+        subtitle={
+          'Connect with friends, share moments, and stay in touch with your loved ones.'
+        }
+      />
     </div>
   );
 };

@@ -2,31 +2,35 @@ import { checkAuth } from '../../../../services';
 import React from 'react';
 import { Actions } from '../../reducer.ts';
 import { ActionType } from '../../action-type.ts';
-import { AUTH_TOKEN } from '../../../../constants';
+import { ServiceStatus } from '../../../../constants';
+import { AuthUser } from '../../store-types.ts';
 
 export const checkAuthAction = async (
-  token: string,
   dispatch: React.Dispatch<Actions>,
   options: Record<string, unknown>,
 ): Promise<void> => {
+  dispatch({
+    type: ActionType.CheckingAuth,
+    payload: {
+      serviceStatus: ServiceStatus.Loading,
+    },
+  });
   try {
-    await checkAuth(options);
-
+    const checkAuthResponse: AuthUser = await checkAuth(options);
+    console.log('Check Auth Response: ', checkAuthResponse);
     dispatch({
-      type: ActionType.LoginRequestSuccess,
+      type: ActionType.CheckingAuthFinished,
       payload: {
-        token,
+        user: checkAuthResponse,
       },
     });
   } catch (error) {
-    localStorage.removeItem(AUTH_TOKEN);
     dispatch({
-      type: ActionType.LoginRequestError,
+      type: ActionType.CheckingAuth,
+      payload: {
+        serviceStatus: ServiceStatus.Error,
+      },
     });
     console.log('Error: ', error);
-  } finally {
-    dispatch({
-      type: ActionType.CheckingAuthFinished,
-    });
   }
 };

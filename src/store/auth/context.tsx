@@ -1,10 +1,7 @@
-import React, { createContext, useContext, useEffect, useReducer } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 import { AuthenticationStateType } from './store-types.ts';
 import { Actions, reducer } from './reducer.ts';
 import { initialState } from './states';
-import { checkAuthAction } from './actions';
-import { ActionType } from './action-type.ts';
-import { AUTH_TOKEN, ServiceStatus } from '../../constants';
 
 export const AuthContext = createContext<{
   state: AuthenticationStateType;
@@ -16,27 +13,6 @@ export const AuthContext = createContext<{
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  useEffect(() => {
-    const token = localStorage.getItem(AUTH_TOKEN);
-    console.log('Token in AuthContext: ', token);
-    if (token) {
-      (async () => {
-        const checkAuthAbortController = new AbortController();
-        dispatch({
-          type: ActionType.CheckingAuth,
-          payload: {
-            serviceStatus: ServiceStatus.Loading,
-          },
-        });
-        await checkAuthAction(token, dispatch, {
-          signal: checkAuthAbortController.signal,
-        });
-      })();
-    } else {
-      dispatch({ type: ActionType.CheckingAuthFinished });
-    }
-  }, []);
 
   return (
     <AuthContext.Provider value={{ state: { ...state }, dispatch }}>

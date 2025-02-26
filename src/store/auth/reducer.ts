@@ -8,10 +8,10 @@ export type Actions = ActionMap<Payload>[keyof ActionMap<Payload>];
 
 type Payload = {
   [ActionType.LoginRequest]: PayloadTypes['loginRequest'];
-  [ActionType.LoginRequestSuccess]: PayloadTypes['loginRequestSuccess'];
+  [ActionType.LoginRequestSuccess]: undefined;
   [ActionType.Logout]: PayloadTypes['logout'];
   [ActionType.CheckingAuth]: PayloadTypes['checkingAuth'];
-  [ActionType.CheckingAuthFinished]: undefined;
+  [ActionType.CheckingAuthFinished]: PayloadTypes['checkingAuthFinished'];
   [ActionType.LoginRequestError]: undefined;
   [ActionType.SignUpRequest]: PayloadTypes['signUpRequest'];
   [ActionType.SignUpRequestSuccess]: PayloadTypes['signUpRequestSuccess'];
@@ -23,43 +23,37 @@ export const reducer = (
 ): AuthenticationStateType => {
   switch (action.type) {
     case ActionType.LoginRequest:
+    case ActionType.SignUpRequest:
+    case ActionType.CheckingAuth:
       return {
         ...state,
-        serviceStatus: ServiceStatus.Loading,
+        serviceStatus: action.payload.serviceStatus,
       };
     case ActionType.LoginRequestSuccess:
       return {
         ...state,
         isAuthenticated: true,
-        token: action.payload.token,
         serviceStatus: ServiceStatus.Success,
-        isInitialized: true,
       };
     case ActionType.LoginRequestError:
       return {
         ...state,
         serviceStatus: ServiceStatus.Error,
         isAuthenticated: false,
-        token: undefined,
       };
     case ActionType.CheckingAuthFinished:
       return {
         ...state,
-        serviceStatus: ServiceStatus.Idle,
-        isInitialized: true,
-      };
-    case ActionType.CheckingAuth:
-    case ActionType.SignUpRequest:
-      return {
-        ...state,
-        serviceStatus: action.payload.serviceStatus,
+        isAuthenticated: true,
+        serviceStatus: ServiceStatus.Success,
+        authUser: action.payload.user,
+        isAuthInitialized: true,
       };
     case ActionType.SignUpRequestSuccess:
       return {
         ...state,
         serviceStatus: ServiceStatus.Success,
         isAuthenticated: true,
-        isInitialized: true,
         authUser: action.payload.user,
       };
     default:

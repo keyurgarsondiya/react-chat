@@ -10,35 +10,31 @@ function App(): React.ReactElement {
   return (
     <AuthProvider>
       <Routes>
-        <Route
-          index
-          path={'/'}
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={'/settings'}
-          element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={'/profile'}
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
+        <Route path={'/'} element={<ProtectedRoute />}>
+          <Route index path={'/'} element={<Home />} />
+          <Route path={'/settings'} element={<Settings />} />
+          <Route path={'/profile'} element={<Profile />} />
+        </Route>
+        {/*<Route*/}
+        {/*  path={'/settings'}*/}
+        {/*  element={*/}
+        {/*    <ProtectedRoute>*/}
+        {/*      <Settings />*/}
+        {/*    </ProtectedRoute>*/}
+        {/*  }*/}
+        {/*/>*/}
+        {/*<Route*/}
+        {/*  path={'/profile'}*/}
+        {/*  element={*/}
+        {/*    <ProtectedRoute>*/}
+        {/*      <Profile />*/}
+        {/*    </ProtectedRoute>*/}
+        {/*  }*/}
+        {/*/>*/}
 
         <Route path={'/login'} element={<Login />} />
         <Route path={'/sign-up'} element={<SignUp />} />
-        <Route index path={'/logout'} element={<Logout />} />
+        <Route path={'/logout'} element={<Logout />} />
       </Routes>
 
       <Toaster />

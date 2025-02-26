@@ -1,27 +1,43 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router';
+import React, { useEffect } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router';
 import { useAuth } from '../../store/auth';
-import { Loading } from '../loading';
 import { ServiceStatus } from '../../constants';
+import { checkAuthAction } from '../../store/auth/actions';
+import { Loading } from '../loading';
 
-export const ProtectedRoute = ({
-  children,
-}: {
-  children: React.ReactElement;
-}): React.ReactElement => {
+export const ProtectedRoute = (): React.ReactElement => {
   const {
-    state: { isAuthenticated, serviceStatus, isInitialized },
+    state: { isAuthenticated, serviceStatus, isAuthInitialized },
+    dispatch,
   } = useAuth();
   const location = useLocation();
 
-  if (serviceStatus === ServiceStatus.Loading || !isInitialized) {
+  useEffect(() => {
+    const checkAuthAbortController = new AbortController();
+
+    (async () => {
+      await checkAuthAction(dispatch, {
+        signal: checkAuthAbortController.signal,
+      });
+    })();
+
+    return () => {
+      checkAuthAbortController.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('isAuthInitialized: ', isAuthInitialized);
+  }, [isAuthInitialized]);
+
+  if (!isAuthInitialized || serviceStatus === ServiceStatus.Loading) {
     return <Loading />;
   }
 
   return (
     <>
       {isAuthenticated ? (
-        children
+        <Outlet />
       ) : (
         <Navigate to="/login" replace state={{ from: location }} />
       )}

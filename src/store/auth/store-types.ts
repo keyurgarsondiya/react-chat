@@ -11,6 +11,5 @@ export interface AuthenticationStateType {
   authUser?: AuthUser;
   isAuthenticated: boolean;
   serviceStatus: ServiceStatus;
-  isInitialized: boolean;
-  token?: string;
+  isAuthInitialized: boolean;
 }

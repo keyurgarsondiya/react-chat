@@ -5,7 +5,7 @@ import { FaLock, FaRegMessage } from 'react-icons/fa6';
 import { FiUser } from 'react-icons/fi';
 import { MdOutlineEmail } from 'react-icons/md';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { AuthImagePattern, Loading } from '../../components';
+import { AuthImagePattern } from '../../components';
 import { Link, useNavigate } from 'react-router';
 import { ServiceStatus } from '../../constants';
 import toast from 'react-hot-toast';
@@ -79,7 +79,7 @@ const SignUp = (): React.ReactElement => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', {});
+      navigate('/', { replace: true });
     }
   }, [isAuthenticated]);
 

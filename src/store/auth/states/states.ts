@@ -5,6 +5,5 @@ export const initialState: AuthenticationStateType = {
   authUser: undefined,
   serviceStatus: ServiceStatus.Idle,
   isAuthenticated: false,
-  isInitialized: false,
-  token: undefined,
+  isAuthInitialized: false,
 };

@@ -31,7 +31,15 @@ export const ProtectedRoute = (): React.ReactElement => {
   }, [isAuthInitialized]);
 
   if (!isAuthInitialized || serviceStatus === ServiceStatus.Loading) {
-    return <Loading />;
+    return (
+      <div
+        className={
+          'min-h-screen w-full flex flex-col justify-center items-center '
+        }
+      >
+        <Loading />
+      </div>
+    );
   }
 
   return (

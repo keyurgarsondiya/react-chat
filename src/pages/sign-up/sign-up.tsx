@@ -1,4 +1,4 @@
-import React, { FormEventHandler, useState } from 'react';
+import React, { FormEventHandler, useEffect, useState } from 'react';
 import { signUpRequestAction } from '../../store/auth/actions';
 import { useAuth } from '../../store/auth';
 import { FaLock, FaRegMessage } from 'react-icons/fa6';
@@ -9,6 +9,7 @@ import { AuthImagePattern, Loading } from '../../components';
 import { Link, useNavigate } from 'react-router';
 import { ServiceStatus } from '../../constants';
 import toast from 'react-hot-toast';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 interface FormData {
   fullName: string;
@@ -73,12 +74,14 @@ const SignUp = (): React.ReactElement => {
           signal: signUpAbortController.signal,
         },
       );
-
-      if (isAuthenticated) {
-        navigate('/');
-      }
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', {});
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
@@ -179,7 +182,7 @@ const SignUp = (): React.ReactElement => {
               className={'btn btn-primary w-full'}
             >
               {serviceStatus === ServiceStatus.Loading ? (
-                <Loading />
+                <AiOutlineLoading3Quarters className="animate-spin text-gray-700 text-base font-bold" />
               ) : (
                 'Create Account'
               )}

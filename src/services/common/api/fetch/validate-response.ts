@@ -11,9 +11,10 @@ export const validateResponse = async (
     throw getFetchError(0);
   }
   if (!response.ok) {
-    console.log('Response: ', response.json());
-    const res = await response.json().catch(() => getFetchError(0));
-    const err = getFetchError(response.status, (res as ErrorObject)?.message);
+    const responseMessage = await response.json();
+    console.log('Response: ', responseMessage);
+    // const res = await response.json().catch(() => getFetchError(0));
+    const err = getFetchError(response.status, responseMessage?.message);
     raiseError(err.type);
     throw err;
   }

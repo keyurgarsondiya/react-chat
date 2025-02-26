@@ -1,5 +1,6 @@
 import { getFetchError } from './get-fetch-error';
 import { ErrorType } from '../../../../constants';
+import { ErrorObject } from '../../../../types';
 
 export const validateResponse = async (
   response: Response,
@@ -10,8 +11,9 @@ export const validateResponse = async (
     throw getFetchError(0);
   }
   if (!response.ok) {
+    console.log('Response: ', response.json());
     const res = await response.json().catch(() => getFetchError(0));
-    const err = getFetchError(response.status, res?.errorMessageDetailed);
+    const err = getFetchError(response.status, (res as ErrorObject)?.message);
     raiseError(err.type);
     throw err;
   }

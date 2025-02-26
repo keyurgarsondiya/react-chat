@@ -2,7 +2,7 @@ import { checkAuth } from '../../../../services';
 import React from 'react';
 import { Actions } from '../../reducer.ts';
 import { ActionType } from '../../action-type.ts';
-import { AUTH_TOKEN } from '../../../../constants';
+import { AUTH_TOKEN, ServiceStatus } from '../../../../constants';
 
 export const checkAuthAction = async (
   token: string,
@@ -21,7 +21,10 @@ export const checkAuthAction = async (
   } catch (error) {
     localStorage.removeItem(AUTH_TOKEN);
     dispatch({
-      type: ActionType.LoginRequestError,
+      type: ActionType.CheckingAuth,
+      payload: {
+        serviceStatus: ServiceStatus.Error,
+      },
     });
     console.log('Error: ', error);
   } finally {

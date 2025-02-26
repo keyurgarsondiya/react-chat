@@ -1,8 +1,8 @@
 import React from 'react';
-import { useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import { useAuth } from '../../store/auth';
-import { Navigate } from 'react-router';
 import { Loading } from '../loading';
+import { ServiceStatus } from '../../constants';
 
 export const ProtectedRoute = ({
   children,
@@ -10,11 +10,11 @@ export const ProtectedRoute = ({
   children: React.ReactElement;
 }): React.ReactElement => {
   const {
-    state: { isAuthenticated, loading, isInitialized },
+    state: { isAuthenticated, serviceStatus, isInitialized },
   } = useAuth();
   const location = useLocation();
 
-  if (loading || !isInitialized) {
+  if (serviceStatus === ServiceStatus.Loading || !isInitialized) {
     return <Loading />;
   }
 

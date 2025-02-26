@@ -4,7 +4,7 @@ import { Actions, reducer } from './reducer.ts';
 import { initialState } from './states';
 import { checkAuthAction } from './actions';
 import { ActionType } from './action-type.ts';
-import { AUTH_TOKEN } from '../../constants';
+import { AUTH_TOKEN, ServiceStatus } from '../../constants';
 
 export const AuthContext = createContext<{
   state: AuthenticationStateType;
@@ -25,6 +25,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const checkAuthAbortController = new AbortController();
         dispatch({
           type: ActionType.CheckingAuth,
+          payload: {
+            serviceStatus: ServiceStatus.Loading,
+          },
         });
         await checkAuthAction(token, dispatch, {
           signal: checkAuthAbortController.signal,

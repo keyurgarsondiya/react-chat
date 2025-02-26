@@ -1,39 +1,83 @@
 import React, { FormEventHandler, useState } from 'react';
-import { loginRequestAction } from '../../store/auth/actions';
+import { signUpRequestAction } from '../../store/auth/actions';
 import { useAuth } from '../../store/auth';
 import { FaLock, FaRegMessage } from 'react-icons/fa6';
 import { FiUser } from 'react-icons/fi';
 import { MdOutlineEmail } from 'react-icons/md';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { AuthImagePattern, Loading } from '../../components';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { ServiceStatus } from '../../constants';
+import toast from 'react-hot-toast';
+
+interface FormData {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 const SignUp = (): React.ReactElement => {
   const {
-    state: { loading },
+    state: { isAuthenticated, serviceStatus },
   } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
     password: '',
   });
   const { dispatch } = useAuth();
+  const navigate = useNavigate();
+
+  const displayToastErrorMessage = (message: string) => {
+    return toast.error(message);
+  };
+
+  const validateForm = () => {
+    if (!formData.fullName.trim()) {
+      displayToastErrorMessage('Full name is required');
+      return false;
+    }
+
+    if (!formData.email.trim()) {
+      displayToastErrorMessage('Email is required');
+      return false;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      displayToastErrorMessage('Invalid email format');
+      return false;
+    }
+
+    if (!formData.password) {
+      displayToastErrorMessage('Password is required');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const loginAbortController = new AbortController();
-    await loginRequestAction(
-      {
-        fullName: formData.fullName,
-        email: formData.email,
-        password: formData.password,
-      },
-      dispatch,
-      {
-        signal: loginAbortController.signal,
-      },
-    );
+    const isFormEntriesValid = validateForm();
+    if (isFormEntriesValid) {
+      const signUpAbortController = new AbortController();
+      await signUpRequestAction(
+        {
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+        },
+        dispatch,
+        {
+          signal: signUpAbortController.signal,
+        },
+      );
+
+      if (isAuthenticated) {
+        navigate('/');
+      }
+    }
   };
 
   return (
@@ -131,10 +175,14 @@ const SignUp = (): React.ReactElement => {
 
             <button
               type={'submit'}
-              disabled={loading}
+              disabled={serviceStatus === ServiceStatus.Loading}
               className={'btn btn-primary w-full'}
             >
-              {loading ? <Loading /> : 'Create Account'}
+              {serviceStatus === ServiceStatus.Loading ? (
+                <Loading />
+              ) : (
+                'Create Account'
+              )}
             </button>
           </form>
 

@@ -1,5 +1,4 @@
 import { noop } from 'lodash';
-
-import { ErrorType } from '../../../types';
+import { ErrorType } from '../../../constants';
 
 export const raiseError = (errorType: ErrorType) => noop;

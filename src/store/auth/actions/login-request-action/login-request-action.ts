@@ -11,6 +11,8 @@ export const loginRequestAction = async (
 ): Promise<void> => {
   try {
     const loginRequestResponse = await loginRequest(body, options);
+    console.log('Login Request Response: ', loginRequestResponse);
+    // TODO: Need to fix this the response from login is AuthUser
     localStorage.setItem(AUTH_TOKEN, loginRequestResponse);
     dispatch({
       type: ActionType.LoginRequestSuccess,

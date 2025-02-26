@@ -6,6 +6,7 @@ export const getFetchError = (
   message?: string,
   context?: string,
 ): ErrorObject => {
+  console.log('Error message: ', message);
   switch (true) {
     case statusCode === 0:
       return {

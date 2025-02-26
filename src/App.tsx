@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router';
 import { Home, Login, Logout, Profile, Settings, SignUp } from './pages';
 import { AuthProvider } from './store/auth';
 import { ProtectedRoute } from './components';
+import { Toaster } from 'react-hot-toast';
 
 function App(): React.ReactElement {
   // TODO: Check GitHub JIRA Integration
@@ -39,6 +40,8 @@ function App(): React.ReactElement {
         <Route path={'/sign-up'} element={<SignUp />} />
         <Route index path={'/logout'} element={<Logout />} />
       </Routes>
+
+      <Toaster />
     </AuthProvider>
   );
 }

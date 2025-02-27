@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router';
 import { Home, Login, Logout, Profile, Settings, SignUp } from './pages';
-import { AuthProvider, ProfileProvider } from './store';
+import { AuthProvider, ChatProvider } from './store';
 import { ProtectedRoute } from './components';
 import { Toaster } from 'react-hot-toast';
 
@@ -9,12 +9,12 @@ function App(): React.ReactElement {
   // TODO: Check GitHub JIRA Integration
   return (
     <AuthProvider>
-      <ProfileProvider>
+      <ChatProvider>
         <Routes>
           <Route path={'/'} element={<ProtectedRoute />}>
             <Route index path={'/'} element={<Home />} />
             <Route path={'/settings'} element={<Settings />} />
-            <Route path={'/profile'} element={<Profile />} />
+            <Route path={'/chat'} element={<Profile />} />
           </Route>
           {/*<Route*/}
           {/*  path={'/settings'}*/}
@@ -25,7 +25,7 @@ function App(): React.ReactElement {
           {/*  }*/}
           {/*/>*/}
           {/*<Route*/}
-          {/*  path={'/profile'}*/}
+          {/*  path={'/chat'}*/}
           {/*  element={*/}
           {/*    <ProtectedRoute>*/}
           {/*      <Profile />*/}
@@ -39,7 +39,7 @@ function App(): React.ReactElement {
         </Routes>
 
         <Toaster />
-      </ProfileProvider>
+      </ChatProvider>
     </AuthProvider>
   );
 }

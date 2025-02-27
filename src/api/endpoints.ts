@@ -8,4 +8,9 @@ export const api = {
     check: `${SERVER_BASE_URL}/api/auth/check`,
     updateProfile: `${SERVER_BASE_URL}/api/auth/update-profile`,
   },
+  chat: {
+    users: `${SERVER_BASE_URL}/api/message/users`,
+    messages: `${SERVER_BASE_URL}/api/message`,
+    sendMessage: `${SERVER_BASE_URL}/api/message/send`,
+  },
 };

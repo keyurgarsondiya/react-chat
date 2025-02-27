@@ -1,6 +1,5 @@
 import { getFetchError } from './get-fetch-error';
 import { ErrorType } from '../../../../constants';
-import { ErrorObject } from '../../../../types';
 
 export const validateResponse = async (
   response: Response,

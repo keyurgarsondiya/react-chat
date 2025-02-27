@@ -1,2 +1,2 @@
 export { AuthProvider } from './auth';
-export { ProfileProvider } from './profile';
+export { ChatProvider } from './chat';

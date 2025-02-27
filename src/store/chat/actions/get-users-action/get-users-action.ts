@@ -1,35 +1,33 @@
 import React from 'react';
+import { Actions } from '../../reducer.ts';
 import { ActionType } from '../../action-type.ts';
 import { ServiceStatus } from '../../../../constants';
-import { Actions } from '../../reducer.ts';
-import { profileImageUpload } from '../../../../services';
 import toast from 'react-hot-toast';
+import { getUsers } from '../../../../services';
 
-export const profileImageUploadAction = async (
-  body: Record<string, unknown>,
+export const getUsersAction = async (
   dispatch: React.Dispatch<Actions>,
   options: Record<string, unknown>,
 ) => {
   dispatch({
-    type: ActionType.ProfileImageUpload,
+    type: ActionType.GetUsers,
     payload: {
       serviceStatus: ServiceStatus.Loading,
     },
   });
   try {
-    const profileImageUploadResponse = await profileImageUpload(body, options);
-    toast.success('Image Updated Successfully');
+    const getUsersResponse = await getUsers(options);
     dispatch({
-      type: ActionType.ProfileImageUploadSuccess,
+      type: ActionType.GetUsersSuccess,
       payload: {
-        user: profileImageUploadResponse,
+        users: getUsersResponse,
       },
     });
   } catch (error) {
     toast.error((error as Error).message);
     console.log('Error: ', error);
     dispatch({
-      type: ActionType.ProfileImageUpload,
+      type: ActionType.GetUsers,
       payload: {
         serviceStatus: ServiceStatus.Error,
       },

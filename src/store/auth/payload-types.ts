@@ -1,5 +1,5 @@
-import { AuthUser } from './store-types.ts';
 import { ServiceStatus } from '../../constants';
+import { AuthUser } from '../../types';
 
 export interface PayloadTypes {
   loginRequest: {
@@ -18,6 +18,10 @@ export interface PayloadTypes {
     serviceStatus: ServiceStatus;
   };
   signUpRequestSuccess: {
+    user: AuthUser;
+  };
+  profileImageUpload: { serviceStatus: ServiceStatus };
+  profileImageUploadSuccess: {
     user: AuthUser;
   };
 }

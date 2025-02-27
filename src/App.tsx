@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router';
 import { Home, Login, Logout, Profile, Settings, SignUp } from './pages';
-import { AuthProvider } from './store/auth';
+import { AuthProvider, ProfileProvider } from './store';
 import { ProtectedRoute } from './components';
 import { Toaster } from 'react-hot-toast';
 
@@ -9,35 +9,37 @@ function App(): React.ReactElement {
   // TODO: Check GitHub JIRA Integration
   return (
     <AuthProvider>
-      <Routes>
-        <Route path={'/'} element={<ProtectedRoute />}>
-          <Route index path={'/'} element={<Home />} />
-          <Route path={'/settings'} element={<Settings />} />
-          <Route path={'/profile'} element={<Profile />} />
-        </Route>
-        {/*<Route*/}
-        {/*  path={'/settings'}*/}
-        {/*  element={*/}
-        {/*    <ProtectedRoute>*/}
-        {/*      <Settings />*/}
-        {/*    </ProtectedRoute>*/}
-        {/*  }*/}
-        {/*/>*/}
-        {/*<Route*/}
-        {/*  path={'/profile'}*/}
-        {/*  element={*/}
-        {/*    <ProtectedRoute>*/}
-        {/*      <Profile />*/}
-        {/*    </ProtectedRoute>*/}
-        {/*  }*/}
-        {/*/>*/}
+      <ProfileProvider>
+        <Routes>
+          <Route path={'/'} element={<ProtectedRoute />}>
+            <Route index path={'/'} element={<Home />} />
+            <Route path={'/settings'} element={<Settings />} />
+            <Route path={'/profile'} element={<Profile />} />
+          </Route>
+          {/*<Route*/}
+          {/*  path={'/settings'}*/}
+          {/*  element={*/}
+          {/*    <ProtectedRoute>*/}
+          {/*      <Settings />*/}
+          {/*    </ProtectedRoute>*/}
+          {/*  }*/}
+          {/*/>*/}
+          {/*<Route*/}
+          {/*  path={'/profile'}*/}
+          {/*  element={*/}
+          {/*    <ProtectedRoute>*/}
+          {/*      <Profile />*/}
+          {/*    </ProtectedRoute>*/}
+          {/*  }*/}
+          {/*/>*/}
 
-        <Route path={'/login'} element={<Login />} />
-        <Route path={'/sign-up'} element={<SignUp />} />
-        <Route path={'/logout'} element={<Logout />} />
-      </Routes>
+          <Route path={'/login'} element={<Login />} />
+          <Route path={'/sign-up'} element={<SignUp />} />
+          <Route path={'/logout'} element={<Logout />} />
+        </Routes>
 
-      <Toaster />
+        <Toaster />
+      </ProfileProvider>
     </AuthProvider>
   );
 }

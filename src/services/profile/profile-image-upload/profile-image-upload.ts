@@ -1,21 +1,24 @@
 import { fetchJson } from '../../common';
 import { api } from '../../../api';
 import { HttpMethod } from '../../../constants';
-
 import { AuthUser } from '../../../types';
 
-export const checkAuth = async (
+export const profileImageUpload = async (
+  body: Record<string, unknown>,
   options: Record<string, unknown>,
 ): Promise<AuthUser> => {
-  const res = await fetchJson(api.auth.check, options, HttpMethod.Get, {
-    credentials: true,
-  });
+  const res = await fetchJson(
+    api.auth.updateProfile,
+    options,
+    HttpMethod.Put,
+    body,
+  );
 
   return {
     id: res?._id,
-    fullName: res?.fullName,
     email: res?.email,
+    fullName: res?.fullName,
     profilePic: res?.profilePic,
     createdAt: res?.createdAt,
-  } as AuthUser;
+  };
 };

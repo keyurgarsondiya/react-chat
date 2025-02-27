@@ -7,4 +7,6 @@ export enum ActionType {
   CheckingAuth = 'checkingAuth',
   CheckingAuthFinished = 'checkingAuthFinished',
   Logout = 'logout',
+  ProfileImageUpload = 'profileImageUpload',
+  ProfileImageUploadSuccess = 'profileImageUploadSuccess',
 }

@@ -1,15 +1,10 @@
 import { ServiceStatus } from '../../constants';
-
-export interface AuthUser {
-  id: string;
-  fullName: string;
-  email: string;
-  profilePic?: string;
-}
+import { AuthUser } from '../../types';
 
 export interface AuthenticationStateType {
   authUser?: AuthUser;
   isAuthenticated: boolean;
   serviceStatus: ServiceStatus;
+  imgUploadServiceStatus: ServiceStatus;
   isAuthInitialized: boolean;
 }

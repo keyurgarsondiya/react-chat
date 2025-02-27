@@ -1,10 +1,10 @@
 import React from 'react';
 import { Actions } from '../../reducer.ts';
-import { AuthUser } from '../../store-types.ts';
 import { signUpRequest } from '../../../../services';
 import { ActionType } from '../../action-type.ts';
 import { ServiceStatus } from '../../../../constants';
 import toast from 'react-hot-toast';
+import { AuthUser } from '../../../../types';
 
 // interface ApiErrorResponse {
 //   message: string;

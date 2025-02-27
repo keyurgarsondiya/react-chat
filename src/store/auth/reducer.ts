@@ -15,6 +15,8 @@ type Payload = {
   [ActionType.LoginRequestError]: undefined;
   [ActionType.SignUpRequest]: PayloadTypes['signUpRequest'];
   [ActionType.SignUpRequestSuccess]: PayloadTypes['signUpRequestSuccess'];
+  [ActionType.ProfileImageUpload]: PayloadTypes['profileImageUpload'];
+  [ActionType.ProfileImageUploadSuccess]: PayloadTypes['profileImageUploadSuccess'];
 };
 
 export const reducer = (
@@ -55,6 +57,17 @@ export const reducer = (
         serviceStatus: ServiceStatus.Success,
         isAuthenticated: true,
         authUser: action.payload.user,
+      };
+    case ActionType.ProfileImageUpload:
+      return {
+        ...state,
+        imgUploadServiceStatus: action.payload.serviceStatus,
+      };
+    case ActionType.ProfileImageUploadSuccess:
+      return {
+        ...state,
+        authUser: action.payload.user,
+        imgUploadServiceStatus: ServiceStatus.Success,
       };
     default:
       return state;

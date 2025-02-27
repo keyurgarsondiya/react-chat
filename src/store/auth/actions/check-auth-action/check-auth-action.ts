@@ -3,7 +3,8 @@ import React from 'react';
 import { Actions } from '../../reducer.ts';
 import { ActionType } from '../../action-type.ts';
 import { ServiceStatus } from '../../../../constants';
-import { AuthUser } from '../../store-types.ts';
+
+import { AuthUser } from '../../../../types';
 
 export const checkAuthAction = async (
   dispatch: React.Dispatch<Actions>,

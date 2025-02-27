@@ -1,7 +1,7 @@
-import { AuthUser } from '../../../store/auth';
 import { api } from '../../../api';
 import { HttpMethod } from '../../../constants';
 import { fetchJson } from '../../common';
+import { AuthUser } from '../../../types';
 
 export const signUpRequest = async (
   body: { fullName: string; email: string; password: string },

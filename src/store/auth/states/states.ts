@@ -4,6 +4,7 @@ import { ServiceStatus } from '../../../constants';
 export const initialState: AuthenticationStateType = {
   authUser: undefined,
   serviceStatus: ServiceStatus.Idle,
+  imgUploadServiceStatus: ServiceStatus.Idle,
   isAuthenticated: false,
   isAuthInitialized: false,
 };

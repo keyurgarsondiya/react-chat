@@ -14,10 +14,12 @@ export const checkAuthAction = async (
     type: ActionType.CheckingAuth,
     payload: {
       serviceStatus: ServiceStatus.Loading,
+      isAuthInitialized: false,
     },
   });
   try {
     const checkAuthResponse: AuthUser = await checkAuth(options);
+    console.log('Check Auth Response: ', checkAuthResponse);
     console.log('Check Auth Response: ', checkAuthResponse);
     dispatch({
       type: ActionType.CheckingAuthFinished,
@@ -26,10 +28,15 @@ export const checkAuthAction = async (
       },
     });
   } catch (error) {
+    if ((error as Error).name === 'AbortError') {
+      console.log('Auth check aborted.');
+      return;
+    }
     dispatch({
       type: ActionType.CheckingAuth,
       payload: {
         serviceStatus: ServiceStatus.Error,
+        isAuthInitialized: true,
       },
     });
     console.log('Error: ', error);

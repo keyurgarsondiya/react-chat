@@ -26,7 +26,6 @@ export const reducer = (
   switch (action.type) {
     case ActionType.LoginRequest:
     case ActionType.SignUpRequest:
-    case ActionType.CheckingAuth:
       return {
         ...state,
         serviceStatus: action.payload.serviceStatus,
@@ -42,6 +41,12 @@ export const reducer = (
         ...state,
         serviceStatus: ServiceStatus.Error,
         isAuthenticated: false,
+      };
+    case ActionType.CheckingAuth:
+      return {
+        ...state,
+        serviceStatus: action.payload.serviceStatus,
+        isAuthInitialized: action.payload.isAuthInitialized,
       };
     case ActionType.CheckingAuthFinished:
       return {

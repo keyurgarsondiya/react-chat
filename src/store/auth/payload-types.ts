@@ -10,6 +10,7 @@ export interface PayloadTypes {
   };
   checkingAuth: {
     serviceStatus: ServiceStatus;
+    isAuthInitialized: boolean;
   };
   checkingAuthFinished: {
     user: AuthUser;

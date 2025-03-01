@@ -12,6 +12,8 @@ type Payload = {
   [ActionType.GetMessages]: PayloadTypes['getMessages'];
   [ActionType.GetMessagesSuccess]: PayloadTypes['getMessagesSuccess'];
   [ActionType.SetSelectedUser]: PayloadTypes['setSelectedUser'];
+  [ActionType.SendMessage]: PayloadTypes['sendMessage'];
+  [ActionType.SendMessageSuccess]: PayloadTypes['sendMessageSuccess'];
 };
 
 export const reducer = (
@@ -45,6 +47,17 @@ export const reducer = (
       return {
         ...state,
         selectedUser: action.payload.user,
+      };
+    case ActionType.SendMessage:
+      return {
+        ...state,
+        messagesServiceStatus: action.payload.serviceStatus,
+      };
+    case ActionType.SendMessageSuccess:
+      return {
+        ...state,
+        messages: [...state.messages, action.payload.message],
+        messagesServiceStatus: ServiceStatus.Success,
       };
     default:
       return {

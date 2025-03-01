@@ -21,6 +21,6 @@ export interface PayloadTypes {
     message: Message;
   };
   setSelectedUser: {
-    user: AuthUser;
+    user?: AuthUser;
   };
 }

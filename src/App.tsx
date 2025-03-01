@@ -14,7 +14,7 @@ function App(): React.ReactElement {
           <Route path={'/'} element={<ProtectedRoute />}>
             <Route index path={'/'} element={<Home />} />
             <Route path={'/settings'} element={<Settings />} />
-            <Route path={'/chat'} element={<Profile />} />
+            <Route path={'/profile'} element={<Profile />} />
           </Route>
           {/*<Route*/}
           {/*  path={'/settings'}*/}

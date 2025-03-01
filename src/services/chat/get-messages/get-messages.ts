@@ -7,7 +7,7 @@ export const getMessages = async (
   userId: string,
   options: Record<string, unknown>,
 ): Promise<Array<Message>> => {
-  const res = fetchJson(
+  const res = await fetchJson(
     `${api.chat.messages}/${userId}`,
     options,
     HttpMethod.Get,
@@ -15,6 +15,7 @@ export const getMessages = async (
 
   if (res && Array.isArray(res)) {
     return res.map((datum) => ({
+      id: datum?._id,
       senderId: datum?.senderId,
       receiverId: datum?.receiverId,
       text: datum?.text,
